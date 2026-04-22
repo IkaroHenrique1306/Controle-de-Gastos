@@ -1,6 +1,6 @@
-# Gastos Residenciais
+# 💰 Sistema de Controle de Gastos Residenciais
 
-Sistema web para controle de gastos residenciais. Permite cadastrar pessoas, categorias e transações financeiras, com relatórios de receitas, despesas e saldo por pessoa e por categoria.
+Sistema web fullstack para controle de gastos residenciais, com gerenciamento de pessoas, categorias e transações financeiras, incluindo relatórios consolidados por pessoa e categoria.
 
 ---
 
@@ -72,6 +72,13 @@ frontend/
 
 ---
 
+## 🔒 Validações
+
+- DataAnnotations para validação de entrada
+- Validação adicional no Service para regras de negócio
+
+---
+
 ## Como executar
 
 ### Windows
@@ -137,3 +144,8 @@ npm run dev
 |--------|--------------------------------|----------------------------------------|
 | `GET`  | `/api/relatorios/por-pessoa`   | Totais por pessoa + total geral        |
 | `GET`  | `/api/relatorios/por-categoria`| Totais por categoria + total geral     |
+
+## 🧪 Testes
+
+- Testes unitários para validação de regras de negócio
+- Cobertura de cenários críticos (ex: menor de idade, validação de categoria)
