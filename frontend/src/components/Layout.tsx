@@ -1,5 +1,8 @@
 import { NavLink, Outlet } from 'react-router-dom'
 
+// Estrutura visual fixa da aplicação: sidebar de navegação + área de conteúdo.
+// <Outlet /> é onde o React Router injeta o componente da rota ativa.
+// NavLink aplica a classe "active" automaticamente na rota atual — usada pelo CSS para destacar o item.
 export default function Layout() {
   return (
     <div className="layout">

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GastosResidenciais.API.Controllers;
 
+// Categorias só podem ser criadas e removidas — sem edição, conforme especificação.
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
@@ -35,6 +36,7 @@ public class CategoriasController(ICategoriaService service) : ControllerBase
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    // 409 Conflict quando há transações vinculadas — remoção bloqueada por integridade referencial.
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> Deletar(Guid id)
     {

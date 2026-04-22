@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GastosResidenciais.API.Controllers;
 
+// Transações só podem ser criadas e removidas — sem edição, conforme especificação.
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
@@ -17,6 +18,7 @@ public class TransacoesController(ITransacaoService service) : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(TransacaoResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    // 422 é retornado quando a requisição é válida em formato mas viola uma regra de negócio.
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> Criar([FromBody] TransacaoRequest dto)
     {

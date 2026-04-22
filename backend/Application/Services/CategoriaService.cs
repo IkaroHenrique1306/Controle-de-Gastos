@@ -13,6 +13,7 @@ public interface ICategoriaService
     Task<(bool Removida, string? Erro)> DeletarAsync(Guid id);
 }
 
+// Gerencia categorias financeiras. Categorias não podem ser editadas — apenas criadas e removidas.
 public class CategoriaService(AppDbContext db) : ICategoriaService
 {
     public async Task<IEnumerable<CategoriaResponse>> ListarAsync() =>
@@ -35,8 +36,10 @@ public class CategoriaService(AppDbContext db) : ICategoriaService
         return new CategoriaResponse(categoria.Id, categoria.Descricao, categoria.Finalidade);
     }
 
-    // Impede a exclusão se houver transações vinculadas, pois o banco usa DeleteBehavior.Restrict.
-    // Retorna uma mensagem de erro descritiva para ser exibida ao usuário.
+    // Valida a existência de transações vinculadas antes de tentar remover.
+    // Isso é necessário porque o banco usa DeleteBehavior.Restrict — sem essa verificação prévia,
+    // o EF lançaria uma exceção de constraint violation sem mensagem amigável ao usuário.
+    // Retorna uma tupla para comunicar o resultado sem usar exceções no fluxo esperado.
     public async Task<(bool Removida, string? Erro)> DeletarAsync(Guid id)
     {
         var categoria = await db.Categorias

@@ -12,10 +12,12 @@ public interface IRelatorioService
     Task<RelatorioPorCategoriaResponse> TotaisPorCategoriaAsync();
 }
 
+// Consolida dados financeiros para exibição em relatórios.
+// Não persiste dados — apenas lê e agrega.
 public class RelatorioService(AppDbContext db) : IRelatorioService
 {
-    // Carrega todas as pessoas com suas transações em uma única query (evita N+1),
-    // calcula os totais individuais e depois soma o total geral.
+    // Uma única query com Include traz pessoas e transações juntas, evitando o problema N+1.
+    // O cálculo de totais é feito em memória após o carregamento.
     public async Task<RelatorioPorPessoaResponse> TotaisPorPessoaAsync()
     {
         var pessoas = await db.Pessoas
@@ -33,7 +35,7 @@ public class RelatorioService(AppDbContext db) : IRelatorioService
         );
     }
 
-    // Mesma lógica do relatório por pessoa, agrupando pelo lado da categoria.
+    // Mesma estratégia do relatório por pessoa, agora agrupando pelo lado da categoria.
     public async Task<RelatorioPorCategoriaResponse> TotaisPorCategoriaAsync()
     {
         var categorias = await db.Categorias
@@ -51,7 +53,7 @@ public class RelatorioService(AppDbContext db) : IRelatorioService
         );
     }
 
-    // Saldo = receitas - despesas. Valor negativo indica que a pessoa gastou mais do que recebeu.
+    // Saldo negativo indica que a pessoa gastou mais do que recebeu no período.
     private static TotalPorPessoaResponse CalcularTotalPorPessoa(Pessoa p)
     {
         var receitas = p.Transacoes.Where(t => t.Tipo == TipoTransacao.Receita).Sum(t => t.Valor);

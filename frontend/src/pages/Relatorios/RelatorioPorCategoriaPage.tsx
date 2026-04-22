@@ -4,6 +4,8 @@ import type { RelatorioPorCategoria } from '../../types'
 
 const fmt = (v: number) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 
+// Página somente leitura — mesma lógica do relatório por pessoa, agora agrupando por categoria.
+// Útil para identificar quais categorias concentram mais gastos ou receitas.
 export default function RelatorioPorCategoriaPage() {
   const [relatorio, setRelatorio] = useState<RelatorioPorCategoria | null>(null)
 
@@ -15,11 +17,13 @@ export default function RelatorioPorCategoriaPage() {
     <>
       <div className="page-header">
         <h2>📂 Totais por Categoria</h2>
+        {/* Recarrega os dados sob demanda, sem precisar recarregar a página */}
         <button className="btn-primary" onClick={() => relatoriosApi.porCategoria().then(setRelatorio)}>
           Atualizar
         </button>
       </div>
 
+      {/* Cards de resumo geral ficam acima da tabela para dar visão rápida do panorama financeiro */}
       <div className="summary-row">
         <div className="summary-card">
           <div className="label">Total Receitas</div>
@@ -56,6 +60,7 @@ export default function RelatorioPorCategoriaPage() {
                 <tr key={c.id}>
                   <td>{c.descricao}</td>
                   <td>
+                    {/* Badge usa a finalidade em minúsculo para mapear à classe CSS correspondente */}
                     <span className={`badge badge-${c.finalidade.toLowerCase()}`}>
                       {c.finalidade}
                     </span>
@@ -67,6 +72,7 @@ export default function RelatorioPorCategoriaPage() {
                   </td>
                 </tr>
               ))}
+              {/* Linha de total geral ao final da tabela, consolidando todas as categorias */}
               <tr className="total-row">
                 <td colSpan={2}>TOTAL GERAL</td>
                 <td>{fmt(relatorio.totalGeralReceitas)}</td>

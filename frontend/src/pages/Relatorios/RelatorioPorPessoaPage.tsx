@@ -4,6 +4,9 @@ import type { RelatorioPorPessoa } from '../../types'
 
 const fmt = (v: number) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 
+// Página somente leitura — não persiste nenhum dado.
+// Exibe os totais de receita, despesa e saldo por pessoa, seguidos de um consolidado geral.
+// O saldo negativo é destacado em vermelho para indicar que a pessoa gastou mais do que recebeu.
 export default function RelatorioPorPessoaPage() {
   const [relatorio, setRelatorio] = useState<RelatorioPorPessoa | null>(null)
 
@@ -15,11 +18,13 @@ export default function RelatorioPorPessoaPage() {
     <>
       <div className="page-header">
         <h2>📊 Totais por Pessoa</h2>
+        {/* Recarrega os dados sob demanda, sem precisar recarregar a página */}
         <button className="btn-primary" onClick={() => relatoriosApi.porPessoa().then(setRelatorio)}>
           Atualizar
         </button>
       </div>
 
+      {/* Cards de resumo geral ficam acima da tabela para dar visão rápida do panorama financeiro */}
       <div className="summary-row">
         <div className="summary-card">
           <div className="label">Total Receitas</div>
@@ -61,6 +66,7 @@ export default function RelatorioPorPessoaPage() {
                   </td>
                 </tr>
               ))}
+              {/* Linha de total geral ao final da tabela, consolidando todas as pessoas */}
               <tr className="total-row">
                 <td>TOTAL GERAL</td>
                 <td>{fmt(relatorio.totalGeralReceitas)}</td>

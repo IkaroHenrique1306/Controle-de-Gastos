@@ -4,6 +4,9 @@ import type { Categoria, CategoriaRequest, Finalidade } from '../../types'
 
 const FORM_VAZIO: CategoriaRequest = { descricao: '', finalidade: 'Despesa' }
 
+// Categorias não possuem edição — apenas criação e exclusão, conforme especificação.
+// A exclusão é bloqueada pela API (409 Conflict) se houver transações vinculadas,
+// por isso o catch em deletar() exibe a mensagem de erro retornada pelo back-end.
 export default function CategoriasPage() {
   const [categorias, setCategorias] = useState<Categoria[]>([])
   const [form, setForm]             = useState<CategoriaRequest>(FORM_VAZIO)
@@ -38,6 +41,7 @@ export default function CategoriasPage() {
       await categoriasApi.deletar(id)
       await carregar()
     } catch (e) {
+      // A API retorna 409 com a mensagem de erro quando há transações vinculadas.
       setErro(e instanceof Error ? e.message : 'Erro ao excluir.')
     }
   }
@@ -62,6 +66,7 @@ export default function CategoriasPage() {
           </div>
           <div className="field">
             <label>Finalidade</label>
+            {/* A finalidade define quais transações poderão usar esta categoria */}
             <select
               value={form.finalidade}
               onChange={e => setForm(f => ({ ...f, finalidade: e.target.value as Finalidade }))}

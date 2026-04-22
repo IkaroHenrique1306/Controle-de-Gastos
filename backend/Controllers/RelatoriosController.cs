@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GastosResidenciais.API.Controllers;
 
+// Endpoints somente leitura — não persistem dados, apenas consolidam e retornam.
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]

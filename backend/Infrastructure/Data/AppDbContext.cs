@@ -1,11 +1,10 @@
 using GastosResidenciais.API.Domain.Entities;
-using GastosResidenciais.API.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace GastosResidenciais.API.Infrastructure.Data;
 
-// Contexto principal do EF Core. Usa SQLite como banco de dados —
-// o arquivo gastos.db é criado automaticamente na pasta do projeto.
+// Ponto de acesso ao banco de dados via EF Core.
+// Usa SQLite: sem necessidade de servidor externo. O arquivo gastos.db é criado automaticamente pelo EnsureCreated no Program.cs.
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
     public DbSet<Pessoa> Pessoas { get; set; }
@@ -16,21 +15,23 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     {
         base.OnModelCreating(builder);
 
-        // Ao deletar uma pessoa, todas as suas transações são removidas automaticamente.
+        // Cascade delete: remover uma Pessoa apaga todas as suas Transações automaticamente.
+        // Evita registros órfãos sem precisar de lógica extra no serviço.
         builder.Entity<Pessoa>()
             .HasMany(p => p.Transacoes)
             .WithOne(t => t.Pessoa)
             .HasForeignKey(t => t.PessoaId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        // Impede a exclusão de uma categoria que ainda possui transações vinculadas.
+        // Restrict: impede deletar uma Categoria que ainda tem Transações vinculadas.
+        // O CategoriaService valida isso antes de tentar remover, retornando uma mensagem amigável.
         builder.Entity<Categoria>()
             .HasMany(c => c.Transacoes)
             .WithOne(t => t.Categoria)
             .HasForeignKey(t => t.CategoriaId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // Persiste os enums como texto no banco para facilitar leitura direta dos dados.
+        // Enums persistidos como string para o banco ser legível sem precisar de lookup de valores numéricos.
         builder.Entity<Categoria>()
             .Property(c => c.Finalidade)
             .HasConversion<string>();

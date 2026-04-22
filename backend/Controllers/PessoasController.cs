@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GastosResidenciais.API.Controllers;
 
+// Controller sem lógica de negócio — delega tudo ao IPessoaService.
+// [ApiController] habilita validação automática de ModelState e binding por convenção.
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
@@ -29,6 +31,7 @@ public class PessoasController(IPessoaService service) : ControllerBase
     public async Task<IActionResult> Criar([FromBody] PessoaRequest dto)
     {
         var criada = await service.CriarAsync(dto);
+        // CreatedAtAction retorna o header Location apontando para o endpoint de busca por id.
         return CreatedAtAction(nameof(ObterPorId), new { id = criada.Id }, criada);
     }
 

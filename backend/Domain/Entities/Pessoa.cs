@@ -1,10 +1,9 @@
 using System.ComponentModel.DataAnnotations;
-using GastosResidenciais.API.Domain.Entities;
 
 namespace GastosResidenciais.API.Domain.Entities;
 
-// Representa uma pessoa que pode registrar transações financeiras.
-// A idade é usada para restringir o tipo de transação permitida (menores de 18 só podem ter despesas).
+// Entidade central do domínio. Toda transação pertence a uma pessoa.
+// A propriedade Idade é crítica: menores de 18 anos só podem registrar despesas — regra validada no TransacaoService.
 public class Pessoa
 {
     public Guid Id { get; set; } = Guid.NewGuid();
@@ -15,5 +14,6 @@ public class Pessoa
     [Range(0, 150)]
     public int Idade { get; set; }
 
+    // Navegação usada pelo EF Core para configurar o cascade delete no AppDbContext.
     public ICollection<Transacao> Transacoes { get; set; } = new List<Transacao>();
 }

@@ -4,7 +4,8 @@ using GastosResidenciais.API.Domain.Enums;
 
 namespace GastosResidenciais.API.Domain.Entities;
 
-// Representa uma movimentação financeira vinculada a uma pessoa e a uma categoria.
+// Representa uma movimentação financeira — despesa ou receita — vinculada a uma Pessoa e a uma Categoria.
+// Apenas transações com Categoria de finalidade compatível com o Tipo podem ser criadas.
 public class Transacao
 {
     public Guid Id { get; set; } = Guid.NewGuid();
@@ -12,6 +13,7 @@ public class Transacao
     [Required, MaxLength(400)]
     public string Descricao { get; set; } = string.Empty;
 
+    // decimal(18,2) garante precisão monetária sem arredondamentos indesejados.
     [Column(TypeName = "decimal(18,2)")]
     public decimal Valor { get; set; }
 

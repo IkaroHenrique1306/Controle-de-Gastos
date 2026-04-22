@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GastosResidenciais.API.Application.Services;
 
+// Contrato que o controller depende. A interface permite trocar a implementação sem alterar o controller.
 public interface IPessoaService
 {
     Task<IEnumerable<PessoaResponse>> ListarAsync();
@@ -14,6 +15,8 @@ public interface IPessoaService
     Task<bool> DeletarAsync(Guid id);
 }
 
+// Gerencia o ciclo de vida completo de pessoas: criação, consulta, atualização e remoção.
+// AsNoTracking é usado em todas as queries de leitura para evitar overhead de rastreamento desnecessário.
 public class PessoaService(AppDbContext db) : IPessoaService
 {
     public async Task<IEnumerable<PessoaResponse>> ListarAsync() =>
@@ -47,7 +50,8 @@ public class PessoaService(AppDbContext db) : IPessoaService
         return new PessoaResponse(pessoa.Id, pessoa.Nome, pessoa.Idade);
     }
 
-    // Ao remover a pessoa, o EF Core exclui automaticamente suas transações (cascade delete).
+    // A remoção das transações ocorre automaticamente via cascade delete configurado no AppDbContext.
+    // Não é necessário deletar as transações manualmente aqui.
     public async Task<bool> DeletarAsync(Guid id)
     {
         var pessoa = await db.Pessoas.FindAsync(id);

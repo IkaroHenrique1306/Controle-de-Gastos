@@ -1,5 +1,5 @@
 namespace GastosResidenciais.API.Domain.Enums;
 
-// Define se a categoria é exclusiva para despesas ou receitas.
-// Restringe quais categorias podem ser usadas em cada tipo de transação.
+// Restringe quais tipos de transação podem usar uma categoria.
+// Uma categoria com finalidade Despesa não pode ser associada a uma transação de Receita, e vice-versa.
 public enum FinalidadeCategoria { Despesa, Receita }
