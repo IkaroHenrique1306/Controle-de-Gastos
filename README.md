@@ -164,6 +164,6 @@ npm run dev
 
 ## Demo
 
-![GIF preview](assets/demo.gif)
+![GIF preview](demo.gif)
 
 📺 Vídeo completo: [https://youtube.com/...](https://youtu.be/rihD8gAND88)
