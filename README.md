@@ -161,3 +161,9 @@ npm run dev
 |--------|---------------------------------|-----------------------------------|
 | `GET`  | `/api/relatorios/por-pessoa`    | Totais por pessoa + total geral   |
 | `GET`  | `/api/relatorios/por-categoria` | Totais por categoria + total geral|
+
+## Demo
+
+![GIF preview](assets/demo.gif)
+
+📺 Vídeo completo: [https://youtube.com/...](https://youtu.be/rihD8gAND88)
